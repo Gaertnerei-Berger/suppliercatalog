@@ -15,6 +15,7 @@ def get_settings():
 		"purchase": settings.net_ek_pricelist,
 		"reseller": settings.net_reseller_pricelist,
 		"gross_sales": settings.gross_vk_pricelist,
+		"net_sales": settings.net_vk_pricelist,
 	}
 
 
@@ -132,14 +133,15 @@ def get_data(filters):
 		purchase_price = get_item_price(item.item_code, settings["purchase"])
 		reseller_price = get_item_price(item.item_code, settings["reseller"])
 		gross_sales_price = get_item_price(item.item_code, settings["gross_sales"])
+		net_sales_price = get_item_price(item.item_code, settings["net_sales"])
 
 		item_data["purchase_price"] = purchase_price
 		item_data["reseller_price"] = reseller_price
 		item_data["gross_sales_price"] = gross_sales_price
 
 		# Calculate discount percentage
-		if reseller_price and gross_sales_price and gross_sales_price > 0:
-			item_data["discount_percent"] = ((gross_sales_price - reseller_price) / gross_sales_price) * 100
+		if reseller_price and net_sales_price and net_sales_price > 0:
+			item_data["discount_percent"] = ((net_sales_price - reseller_price) / net_sales_price) * 100
 		else:
 			item_data["discount_percent"] = 0
 
@@ -157,8 +159,7 @@ def get_item_price(item_code, price_list_name):
 		.select(ItemPrice.price_list_rate)
 		.where(
 			(ItemPrice.item_code == item_code) &
-			(ItemPrice.price_list == price_list_name) &
-			(ItemPrice.selling == 1)
+			(ItemPrice.price_list == price_list_name)
 		)
 		.orderby(ItemPrice.modified, order=frappe.qb.desc)
 		.limit(1)

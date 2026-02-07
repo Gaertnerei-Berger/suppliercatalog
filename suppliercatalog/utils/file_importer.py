@@ -284,7 +284,7 @@ def import_supplier_catalog_items_from_csv(doc):
 
     frappe.publish_progress(
         100,
-        title="Supplier Catalog Import"
+        title="Supplier Catalog Import",
         description=f"Finished. Imported {imported} items."
     )
 

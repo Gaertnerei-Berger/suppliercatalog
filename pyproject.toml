@@ -8,7 +8,7 @@ requires-python = ">=3.10"
 readme = "README.md"
 dynamic = ["version"]
 dependencies = [
-xmltodict = ">=0.13.0"
+    "xmltodict>=0.13.0"
 ]
 
 [build-system]

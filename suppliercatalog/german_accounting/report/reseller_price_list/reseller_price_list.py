@@ -95,6 +95,7 @@ def get_data(filters):
 		.on(ItemSupplier.parent == Item.name)
 		.select(
 			Item.name.as_("item_code"),
+			Item.item_name,
 			Item.item_group,
 			ItemSupplier.supplier,
 			Item.custom_reseller_item.as_("reseller_item"),

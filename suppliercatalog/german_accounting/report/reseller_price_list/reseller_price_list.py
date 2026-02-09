@@ -174,6 +174,7 @@ def get_item_price(item_code, price_list_name):
 @frappe.validate_and_sanitize_search_inputs
 def get_suppliers_from_items(doctype, txt, searchfield, start, page_len, filters):
 	ItemSupplier = DocType("Item Supplier")
+	Supplier = DocType("Supplier")
 
 	min_idx_subquery = (
 		frappe.qb.from_(ItemSupplier)
@@ -192,7 +193,13 @@ def get_suppliers_from_items(doctype, txt, searchfield, start, page_len, filters
 			(ItemSupplier.parent == min_idx_subquery.parent) &
 			(ItemSupplier.idx == min_idx_subquery.min_idx)
 		)
-		.select(ItemSupplier.supplier)
+		.inner_join(Supplier)
+		.on(Supplier.name == ItemSupplier.supplier)
+		.select(
+			ItemSupplier.supplier,
+			Supplier.supplier_name,
+			Supplier.supplier_group
+		)
 		.distinct()
 		.where(
 			(ItemSupplier.parenttype == "Item") &
